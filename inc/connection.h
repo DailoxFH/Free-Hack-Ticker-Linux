@@ -41,6 +41,7 @@ private:
     const std::string PM_URL = BASE_URL+"private.php?folderid=0";
     const std::string CHATBOX_URL = BASE_URL+"misc.php?show=ccbmessages";
     const std::string LOGIN_URL = BASE_URL+"login.php?do=login";
+    const std::string CHECK_URL = BASE_URL+"member.php?78756-Dailox";
 
     std::string *cookiePath;
     CURL *curl;

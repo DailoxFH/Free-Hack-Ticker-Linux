@@ -148,12 +148,8 @@ std::string Connection::getChatBox() {
 
 bool Connection::isLoggedIn() {
 
-    std::string output = request("https://free-hack.com/member.php?78756-Dailox");
-    if(output.find("Du bist nicht angemeldet oder du hast keine Rechte diese Seite zu betreten. Dies könnte einer der Gründe sein") != std::string::npos) {
-        return false;
-    } else {
-        return true;
-    }
+    std::string output = request(CHECK_URL);
+    return output.find("Du bist nicht angemeldet oder du hast keine Rechte diese Seite zu betreten. Dies könnte einer der Gründe sein") == std::string::npos;
 }
 
 void Connection::cleanup(bool noCleanup) {
