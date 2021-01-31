@@ -76,7 +76,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     timerCheckForUpdates->start(notifationDuration*60000);
     timerCheckLoginByCookie->start(1500);
-    timerCheckLoginByCheck->start(1*60000);
+    timerCheckLoginByCheck->start(2*60000);
 
 
     createActions();
@@ -84,7 +84,7 @@ MainWindow::MainWindow(QWidget *parent)
     setIcon();
     trayIcon->show();
     setWindowTitle(tr("Free-Hack Ticker"));
-    connect(trayIcon, SIGNAL(activated()), this, SLOT(iconActivated()));
+    connect(trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::iconActivated);
 
     checkLoginByCookie();
 
@@ -177,32 +177,6 @@ void MainWindow::loggedIn(bool in) {
     }
 }
 
-
-
-void MainWindow::on_comboBox_textActivated(const QString &arg1)
-{
-    if(arg1 == "Login")
-    {
-        QByteArray ba1 = ui->lineEditPassword->text().toUtf8();
-        char *pw = ba1.data();
-        QByteArray ba2 = ui->lineEditusername->text().toUtf8();
-        char *username = ba2.data();
-        checker->login(username, pw);
-        ba1.remove(0, ba1.length());
-        ba2.remove(0, ba2.length());
-        ui->lineEditPassword->clear();
-    }
-    if(arg1 == "Logout") {
-        checker->logout();
-        on_checkBox_stateChanged(1);
-    }
-
-    if(arg1 == "Update/Fetch") {
-        checker->doGlobalUpdate();
-        QMessageBox::information(this, "Fertig", "Fertig mit updaten");
-    }
-}
-
 void MainWindow::setVisible(bool visible)
 {
     minimizeAction->setEnabled(visible);
@@ -241,7 +215,7 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void MainWindow::showMessage(const QString title, const QString message)
 {
-    trayIcon->showMessage(title, message, trayIcon->icon(), notifationDuration*1000);
+    trayIcon->showMessage(title, message, QSystemTrayIcon::Information, notifationDuration*1000);
 }
 
 void MainWindow::createActions()
@@ -363,4 +337,31 @@ void MainWindow::on_label_9_linkActivated(const QString &link)
 void MainWindow::on_label_10_linkActivated(const QString &link)
 {
     QDesktopServices::openUrl(QUrl(link));
+}
+
+
+void MainWindow::on_comboBox_activated()
+{
+
+    QString reason = ui->comboBox->currentText();
+    if(reason == "Login") {
+        QByteArray ba1 = ui->lineEditPassword->text().toUtf8();
+        char *pw = ba1.data();
+        QByteArray ba2 = ui->lineEditusername->text().toUtf8();
+        char *username = ba2.data();
+        checker->login(username, pw);
+        ba1.remove(0, ba1.length());
+        ba2.remove(0, ba2.length());
+        ui->lineEditPassword->clear();
+    }
+    if(reason == "Logout") {
+        checker->logout();
+        on_checkBox_stateChanged(1);
+    }
+
+    if(reason == "Update/Fetch") {
+        checker->doGlobalUpdate();
+        QMessageBox::information(this, "Fertig", "Fertig mit updaten");
+    }
+
 }

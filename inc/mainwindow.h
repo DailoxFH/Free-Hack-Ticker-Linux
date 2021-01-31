@@ -42,7 +42,6 @@ protected:
     void closeEvent(QCloseEvent *event) override;
 
 private slots:
-    void on_comboBox_textActivated(const QString &arg1);
     void setIcon();
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void checkLoginByCookie();
@@ -64,6 +63,8 @@ private slots:
     void on_label_9_linkActivated(const QString &link);
 
     void on_label_10_linkActivated(const QString &link);
+
+    void on_comboBox_activated();
 
 private:
     Ui::MainWindow *ui;
