@@ -182,6 +182,9 @@ std::string Connection::request(std::string url, std::string username, std::stri
         if(!checkCookie()) {
             readFromFileAndSetCookie(*cookiePath);
         }
+    } else {
+        curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "");
+        curl_easy_setopt(curl, CURLOPT_COOKIEJAR, "");
     }
 
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
