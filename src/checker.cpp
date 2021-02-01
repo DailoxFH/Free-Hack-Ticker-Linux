@@ -113,7 +113,7 @@ void Checker::checkLoginByCheck(bool login) {
     if(!ret) {
         QFile::remove(defCookiePath);
         if(ui->isHidden() || login) {
-            QMessageBox::critical(ui, "Ausgeloggt", "Du scheinst ausgeloggt zu sein. Entweder ist dein Nutzername/Passwort falsch oder deine Sitzung ist abgelaufen. Bitte logge dich erneut ein.");
+            ui->showMessage("Ausgeloggt", "Du scheinst ausgeloggt zu sein. Entweder ist dein Nutzername/Passwort falsch oder deine Sitzung ist abgelaufen. Bitte logge dich erneut ein.", QSystemTrayIcon::Critical);
         }
     }
     ui->loggedIn(ret);

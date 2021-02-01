@@ -213,9 +213,9 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
     }
 }
 
-void MainWindow::showMessage(const QString title, const QString message)
+void MainWindow::showMessage(const QString title, const QString message, QSystemTrayIcon::MessageIcon icon)
 {
-    trayIcon->showMessage(title, message, QSystemTrayIcon::Information, notifationDuration*1000);
+    trayIcon->showMessage(title, message, icon, notifationDuration*1000);
 }
 
 void MainWindow::createActions()

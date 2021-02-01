@@ -35,7 +35,7 @@ public:
     bool rememberMe;
 
     void setVisible(bool visible) override;
-    void showMessage(const QString title, const QString message);
+    void showMessage(const QString title, const QString message, QSystemTrayIcon::MessageIcon icon=QSystemTrayIcon::Information);
     void loggedIn(bool in);
 
 protected:
