@@ -34,21 +34,9 @@ set(PROJECT_SOURCES
 
 qt5_add_resources(PROJECT_SOURCES resources.qrc)
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(fhticker
-        ${PROJECT_SOURCES}
-        )
-else()
-    if(ANDROID)
-        add_library(fhticker SHARED
-            ${PROJECT_SOURCES}
-        )
-    else()
-        add_executable(fhticker
-            ${PROJECT_SOURCES}
-        )
-    endif()
-endif()
+add_executable(fhticker
+    ${PROJECT_SOURCES}
+    )
 
 target_link_libraries(fhticker PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(fhticker PRIVATE curl)
