@@ -71,13 +71,8 @@ MainWindow::MainWindow(QWidget *parent)
     QTimer *timerCheckLoginByCookie = new QTimer(this);
     connect(timerCheckLoginByCookie, SIGNAL(timeout()), this, SLOT(checkLoginByCookie()));
 
-    QTimer *timerCheckLoginByCheck = new QTimer(this);
-    connect(timerCheckLoginByCheck, SIGNAL(timeout()), this, SLOT(checkLoginByCheck()));
-
     timerCheckForUpdates->start(notifationDuration*60000);
     timerCheckLoginByCookie->start(1500);
-    timerCheckLoginByCheck->start(2*60000);
-
 
     createActions();
     createTrayIcon();
