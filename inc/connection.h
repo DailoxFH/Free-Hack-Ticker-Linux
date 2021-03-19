@@ -18,7 +18,8 @@
 class Connection
 {
 public:
-    Connection(std::string *path);
+    //TODO: Mal aus dem Mist ne Liste oder so machen
+    Connection(std::string *path, bool *encryptCookie);
     ~Connection();
     char *str2md5(const char *str, int length);
 
@@ -46,6 +47,7 @@ private:
     std::string *cookiePath;
     CURL *curl;
     bool cleaned;
+    bool *encryptCookie;
 };
 
 #endif // CONNECTION_H

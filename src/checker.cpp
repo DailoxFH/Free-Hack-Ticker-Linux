@@ -2,7 +2,7 @@
 
 #include "mainwindow.h"
 
-Checker::Checker(MainWindow *ui, std::string *refCookiePath, QString &configPath)
+Checker::Checker(MainWindow *ui, std::string *refCookiePath, QString &configPath, bool *encryptCookie)
 {
     this->ui = ui;
     oldChatBoxPath = configPath+"/old_chatbox.xml";
@@ -10,7 +10,7 @@ Checker::Checker(MainWindow *ui, std::string *refCookiePath, QString &configPath
     defCookiePath = configPath+"/cookies.txt";
 
     parser = new HtmlParser();
-    connection = new Connection(refCookiePath);
+    connection = new Connection(refCookiePath, encryptCookie);
 
 
 }

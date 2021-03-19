@@ -33,6 +33,7 @@ public:
     bool updatePMs;
     bool updateChatBox;
     bool rememberMe;
+    bool encryptCookie;
 
     void setVisible(bool visible) override;
     void showMessage(const QString title, const QString message, QSystemTrayIcon::MessageIcon icon=QSystemTrayIcon::Information);
@@ -66,6 +67,10 @@ private slots:
 
     void on_comboBox_activated();
 
+    void on_checkBox_2_stateChanged(int arg1);
+
+    void on_btnResetSettings_clicked();
+
 private:
     Ui::MainWindow *ui;
     Checker *checker;
@@ -83,6 +88,7 @@ private:
     int updateInterval;
     int notifationDuration;
     bool darkMode;
+    bool sawDisclaimer;
 
     void checkSetting(QString setting, int defaultValue, int max=0, int min=0);
     void initDarkMode();

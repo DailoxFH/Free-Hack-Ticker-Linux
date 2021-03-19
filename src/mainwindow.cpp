@@ -16,8 +16,10 @@ MainWindow::MainWindow(QWidget *parent)
     checkSetting("updatePrivateMessages", 0);
     checkSetting("darkMode", 0);
     checkSetting("rememberMe", 0);
+    checkSetting("encryptCookie", 0);
 
     amILoggedIn = true;
+    encryptCookie = false;
 
     if(loadSettings.value("darkMode").toInt() == 1) {
         ui->checkBoxDarkMode->setChecked(true);
@@ -34,6 +36,12 @@ MainWindow::MainWindow(QWidget *parent)
         ui->checkBoxPM->setChecked(true);
         updatePMs = true;;
 
+    }
+
+    if(loadSettings.value("encryptCookie").toInt() == 1) {
+        encryptCookie = true;
+        sawDisclaimer = true;
+        ui->checkBox_2->setChecked(true);
     }
 
     notifationDuration = loadSettings.value("notificationDuration").toInt();
@@ -61,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     cook = tempCookiePath.toUtf8().constData();
-    checker = new Checker(this, &cook, configPath);
+    checker = new Checker(this, &cook, configPath, &encryptCookie);
 
 
 
@@ -358,5 +366,44 @@ void MainWindow::on_comboBox_activated()
         checker->doGlobalUpdate();
         QMessageBox::information(this, "Fertig", "Fertig mit updaten");
     }
+
+}
+
+void MainWindow::on_checkBox_2_stateChanged(int arg1)
+{
+    if(arg1 == 2) {
+        QMessageBox::StandardButton reply;
+        if(!sawDisclaimer) {
+            reply = QMessageBox::critical(this, "Experimentell", "Dies ist ein experimentelles Feature und funktioniert möglicherweise nicht richtig. Trotzdem fortfahren?", QMessageBox::Yes|QMessageBox::No);
+        }
+        if(sawDisclaimer || reply == QMessageBox::Yes) {
+            encryptCookie = true;
+            loadSettings.setValue("encryptCookie", 1);
+            loadSettings.setValue("sawDisclaimer", 1);
+            return;
+        } else {
+            ui->checkBox_2->setChecked(false);
+            goto jmp;
+            //^ https://cdn.funnyisms.com/211749e6-8ddf-4021-84a2-8d6c8ad273f6.jpg
+        }
+    }
+    jmp:
+    //^ https://meme-generator.com/wp-content/uploads/mememe/2019/07/mememe_5f912fafb1e42d079bcda48a3f718680-1.jpg
+    encryptCookie=false;
+    loadSettings.setValue("encryptCookie", 0);
+}
+
+void MainWindow::on_btnResetSettings_clicked()
+{
+    QStringList allKeys = loadSettings.allKeys();
+    foreach(auto &s, allKeys) {
+        loadSettings.setValue(s, 0);
+    }
+    loadSettings.setValue("notificationDuration", ui->spinBoxNotificationDuration->minimum());
+    loadSettings.setValue("updateInterval", ui->spinBoxUpdateInterval->minimum());
+    this->loggedIn(false);
+    checker->logout();
+    QMessageBox::information(this, "Einstellungen zurückgesetzt", "Bitte starte die Anwendung neu");
+    exit(0);
 
 }

@@ -4,7 +4,7 @@
 #include <array>
 #include <string>
 
-Connection::Connection(std::string *path)
+Connection::Connection(std::string *path, bool *encryptCookie)
 {
     cookiePath = path;
     curl = curl_easy_init();
@@ -12,6 +12,8 @@ Connection::Connection(std::string *path)
 
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
     curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 5);
+
+    this->encryptCookie = encryptCookie;
 }
 
 char *Connection::str2md5(const char *str, int length) {
@@ -101,7 +103,12 @@ bool Connection::checkCookie(bool writeToFile){
                     QFile file(path);
                     if( file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
                         QTextStream stream(&file);
-                        std::string final = encryptDecrypt(cookies->data);
+                        std::string final;
+                        if(*encryptCookie) {
+                            final = encryptDecrypt(cookies->data);
+                        } else {
+                            final = cookies->data;
+                        }
                         stream << final.c_str() << "\n";
                         file.close();
                     }
@@ -131,7 +138,12 @@ void Connection::readFromFileAndSetCookie(std::string &file) {
     QStringList temp = text.split("\n");
 
     foreach(auto &s, temp) {
-        std::string toStd = encryptDecrypt(s.toUtf8().constData());
+        std::string toStd;
+        if(*encryptCookie) {
+            toStd = encryptDecrypt(s.toUtf8().constData());
+        } else {
+            toStd = s.toUtf8().constData();
+        }
         curl_easy_setopt(curl, CURLOPT_COOKIELIST, toStd.c_str());
     }
 }

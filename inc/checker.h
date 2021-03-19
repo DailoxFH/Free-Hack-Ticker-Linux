@@ -10,7 +10,8 @@ class MainWindow;
 class Checker
 {
 public:
-    Checker(MainWindow *ui, std::string *refCookiePath, QString &configPath);
+    //TODO: Mal aus dem Mist ne Liste oder so machen
+    Checker(MainWindow *ui, std::string *refCookiePath, QString &configPath, bool *encryptCookie);
     ~Checker();
     void checkLoginByCookie();
     void checkLoginByCheck(bool login=false);
