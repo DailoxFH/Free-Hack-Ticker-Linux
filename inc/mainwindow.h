@@ -10,6 +10,7 @@
 #include <QCloseEvent>
 #include <QTextDocument>
 #include <QDesktopServices>
+#include <unistd.h>
 
 
 

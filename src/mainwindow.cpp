@@ -223,6 +223,16 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void MainWindow::showMessage(const QString title, const QString message, QSystemTrayIcon::MessageIcon icon)
 {
+    QPoint mouseLoc = QCursor::pos();
+    int x = mouseLoc.x();
+    int y = mouseLoc.y();
+    while(true) {
+        QPoint mouseLoc = QCursor::pos();
+        if(mouseLoc.x() != x || mouseLoc.y() != y) {
+            break;
+        }
+        usleep(58000);
+    }
     trayIcon->showMessage(title, message, icon, notifationDuration*1000);
 }
 
