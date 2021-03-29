@@ -71,6 +71,8 @@ private slots:
 
     void on_btnResetSettings_clicked();
 
+    void on_checkBoxMinimize_stateChanged(int arg1);
+
 private:
     Ui::MainWindow *ui;
     Checker *checker;

@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    this->setFixedSize(QSize(320, 251));
+    this->setFixedSize(QSize(320, 270));
     ui->setupUi(this);
     ui->tabWidget->setCurrentIndex(0);
     amILoggedIn = false;
@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     checkSetting("darkMode", 0);
     checkSetting("rememberMe", 0);
     checkSetting("encryptCookie", 0);
+    checkSetting("startHidden", 0);
 
     amILoggedIn = true;
     encryptCookie = false;
@@ -25,6 +26,10 @@ MainWindow::MainWindow(QWidget *parent)
         ui->checkBoxDarkMode->setChecked(true);
         on_checkBoxDarkMode_stateChanged(2);
 
+    }
+
+    if(loadSettings.value("startHidden") == 1) {
+        ui->checkBoxMinimize->setChecked(true);
     }
 
     if(loadSettings.value("updateChatBox").toInt() == 1) {
@@ -406,4 +411,14 @@ void MainWindow::on_btnResetSettings_clicked()
     QMessageBox::information(this, "Einstellungen zurückgesetzt", "Bitte starte die Anwendung neu");
     exit(0);
 
+}
+
+
+void MainWindow::on_checkBoxMinimize_stateChanged(int arg1)
+{
+    if(arg1 == 2) {
+        loadSettings.setValue("startHidden", 1);
+    } else {
+        loadSettings.setValue("startHidden", 0);
+    }
 }
