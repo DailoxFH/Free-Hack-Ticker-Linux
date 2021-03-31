@@ -11,8 +11,7 @@
 #include <QTextDocument>
 #include <QDesktopServices>
 #include <unistd.h>
-
-
+#include "notification.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -66,7 +65,7 @@ private slots:
 
     void on_label_10_linkActivated(const QString &link);
 
-    void on_comboBox_activated();
+    void on_comboBox_activated(const QString &arg1);
 
     void on_checkBox_2_stateChanged(int arg1);
 
@@ -74,9 +73,16 @@ private slots:
 
     void on_checkBoxMinimize_stateChanged(int arg1);
 
+    void on_checkBoxOwnNotifications_stateChanged(int arg1);
+
+    void on_pushButton_clicked();
+
+    void on_comboBoxLocation_activated(int index);
+
 private:
     Ui::MainWindow *ui;
     Checker *checker;
+    Notification *notification;
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
@@ -92,6 +98,8 @@ private:
     int notifationDuration;
     bool darkMode;
     bool sawDisclaimer;
+    bool useCustomNotifications;
+    int notificationLocation;
 
     void checkSetting(QString setting, int defaultValue, int max=0, int min=0);
     void initDarkMode();

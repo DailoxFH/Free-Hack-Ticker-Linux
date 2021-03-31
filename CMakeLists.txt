@@ -30,6 +30,8 @@ set(PROJECT_SOURCES
         inc/htmlparser.h
         src/checker.cpp
         inc/checker.h
+        src/notification.cpp
+        inc/notification.h
 )
 
 qt5_add_resources(PROJECT_SOURCES resources.qrc)

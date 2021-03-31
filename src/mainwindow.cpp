@@ -18,14 +18,18 @@ MainWindow::MainWindow(QWidget *parent)
     checkSetting("rememberMe", 0);
     checkSetting("encryptCookie", 0);
     checkSetting("startHidden", 0);
+    checkSetting("customNotifications", 0);
+    checkSetting("notificationLocation", 4, 4, 1);
 
     amILoggedIn = true;
     encryptCookie = false;
+    useCustomNotifications = false;
 
     if(loadSettings.value("darkMode").toInt() == 1) {
         ui->checkBoxDarkMode->setChecked(true);
         on_checkBoxDarkMode_stateChanged(2);
-
+    } else {
+        on_checkBoxDarkMode_stateChanged(1);
     }
 
     if(loadSettings.value("startHidden") == 1) {
@@ -54,6 +58,15 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->spinBoxNotificationDuration->setValue(notifationDuration);
     ui->spinBoxUpdateInterval->setValue(updateInterval);
+
+    if(loadSettings.value("customNotifications").toInt() == 1) {
+        on_checkBoxOwnNotifications_stateChanged(2);
+        notificationLocation = loadSettings.value("notificationLocation").toInt();
+        notification = new Notification(this, &notificationLocation, &notifationDuration, &darkMode);
+        ui->comboBoxLocation->setCurrentIndex(notificationLocation-1);
+        ui->checkBoxOwnNotifications->setChecked(true);
+    }
+
 
     QString path = loadSettings.fileName();
     QStringList splittedPath = path.split("/");
@@ -149,6 +162,9 @@ void MainWindow::checkSetting(QString setting, int defaultValue, int max, int mi
 MainWindow::~MainWindow()
 {
     trayIcon->contextMenu()->clear();
+    if(useCustomNotifications) {
+        delete notification;
+    }
     delete checker;
     delete trayIcon;
     delete minimizeAction;
@@ -233,6 +249,15 @@ void MainWindow::showMessage(const QString title, const QString message, QSystem
         }
         usleep(58000);
     }
+
+    if(useCustomNotifications) {
+        notification->setMessage(title, message);
+        if(notification->getCurrentQueue().length() <= 1) {
+            notification->show();
+        }
+        return;
+    }
+
     trayIcon->showMessage(title, message, icon, notifationDuration*1000);
 }
 
@@ -289,9 +314,11 @@ void MainWindow::on_checkBoxDarkMode_stateChanged(int arg1)
         initDarkMode();
         this->setPalette(darkPalette);
         loadSettings.setValue("darkMode", 1);
+        darkMode = true;
     } else{
         this->setPalette(normalPalette);
         loadSettings.setValue("darkMode", 0);
+        darkMode = false;
     }
 }
 
@@ -358,8 +385,9 @@ void MainWindow::on_label_10_linkActivated(const QString &link)
 }
 
 
-void MainWindow::on_comboBox_activated()
+void MainWindow::on_comboBox_activated(const QString &arg1)
 {
+    Q_UNUSED(arg1)
 
     QString reason = ui->comboBox->currentText();
     if(reason == "Login") {
@@ -431,4 +459,27 @@ void MainWindow::on_checkBoxMinimize_stateChanged(int arg1)
     } else {
         loadSettings.setValue("startHidden", 0);
     }
+}
+
+void MainWindow::on_checkBoxOwnNotifications_stateChanged(int arg1)
+{
+    if(arg1 == 2) {
+        ui->comboBoxLocation->setEnabled(true);
+        loadSettings.setValue("customNotifications", 1);
+        useCustomNotifications=true;
+    } else {
+        ui->comboBoxLocation->setEnabled(false);
+        loadSettings.setValue("customNotifications", 0);
+    }
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    showMessage("Neue ChatBox Nachricht", "'Dies ist ein Testbeitrag'\n Erstellt von Dailox am 31-12, 00:00");
+}
+
+void MainWindow::on_comboBoxLocation_activated(int index)
+{
+    notificationLocation=index+1;
+    loadSettings.setValue("notificationLocation", notificationLocation);
 }
