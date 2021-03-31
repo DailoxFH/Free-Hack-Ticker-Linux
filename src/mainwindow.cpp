@@ -21,9 +21,11 @@ MainWindow::MainWindow(QWidget *parent)
     checkSetting("customNotifications", 0);
     checkSetting("notificationLocation", 4, 4, 1);
 
+    sawDisclaimer=false;
     amILoggedIn = true;
     encryptCookie = false;
     useCustomNotifications = false;
+    notification = nullptr;
 
     if(loadSettings.value("darkMode").toInt() == 1) {
         ui->checkBoxDarkMode->setChecked(true);
@@ -467,9 +469,16 @@ void MainWindow::on_checkBoxOwnNotifications_stateChanged(int arg1)
         ui->comboBoxLocation->setEnabled(true);
         loadSettings.setValue("customNotifications", 1);
         useCustomNotifications=true;
+
+        notification = new Notification(this, &notificationLocation, &notifationDuration, &darkMode);
+
     } else {
         ui->comboBoxLocation->setEnabled(false);
         loadSettings.setValue("customNotifications", 0);
+        useCustomNotifications=false;
+        if(notification != nullptr) {
+            delete notification;
+        }
     }
 }
 
