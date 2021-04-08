@@ -10,7 +10,7 @@ Checker::Checker(MainWindow *ui, std::string *refCookiePath, QString &configPath
     defCookiePath = configPath+"/cookies.txt";
 
     parser = new HtmlParser();
-    connection = new Connection(refCookiePath, encryptCookie);
+    connection = new Connection(ui, refCookiePath, encryptCookie);
 
 
 }
@@ -27,7 +27,9 @@ void Checker::checkForNewCBMessages() {
     if(!ui->amILoggedIn || !ui->updateChatBox) {
         return;
     }
+
     QString newChatBox = QString::fromStdString(connection->getChatBox());
+
     generalCheck(oldChatBoxPath, newChatBox, false);
 }
 
@@ -169,11 +171,6 @@ bool Checker::checkForUpdates(QMultiMap<int, QString> oldBox, QMultiMap<int,QStr
             toSearch = HtmlParser::TOPIC;
             changed = true;
 
-        }
-    } else {
-        if(oldList.at(HtmlParser::TITLE) != newList.at(HtmlParser::TITLE)) {
-            toSearch = HtmlParser::TITLE;
-            changed = true;
         }
     }
 

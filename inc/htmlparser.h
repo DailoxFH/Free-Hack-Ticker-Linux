@@ -19,7 +19,7 @@ public:
 
     HtmlParser();
     void parsePosts(const QString &html, QMultiMap<int, QString> &output);
-    void getValues(QMultiMap<int, QString> &hash, int &what, QStringList &output);
+    void getValues(QMultiMap<int, QString> &hash, int what, QStringList &output);
     void getDifferenceByValue(QMultiMap<int, QString> &hash, const QString &where, QStringList &output);
     void parsePMs(const QString &html, QString &output);
     void parseChatBox(const QString &html, QMultiMap<int, QString> &output);

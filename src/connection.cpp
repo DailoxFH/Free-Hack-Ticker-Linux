@@ -3,8 +3,9 @@
 #include <iostream>
 #include <array>
 #include <string>
+#include "mainwindow.h"
 
-Connection::Connection(std::string *path, bool *encryptCookie)
+Connection::Connection(MainWindow *ui, std::string *path, bool *encryptCookie)
 {
     cookiePath = path;
     curl = curl_easy_init();
@@ -14,6 +15,8 @@ Connection::Connection(std::string *path, bool *encryptCookie)
     curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 5);
 
     this->encryptCookie = encryptCookie;
+
+    this->ui = ui;
 }
 
 char *Connection::str2md5(const char *str, int length) {
@@ -206,8 +209,11 @@ std::string Connection::request(std::string url, std::string username, std::stri
     curl_easy_setopt(curl, CURLOPT_POST, post);
 
 
-    curl_easy_perform(curl);
+    CURLcode res = curl_easy_perform(curl);
 
+    if(res != CURLE_OK) {
+        ui->showMessage("Fehler beim herstellen einer Verbindung", "Es ist ein Fehler beim herstellen einer Verbindung zu free-hack.com aufgetreten");
+    }
 
 
     if(*cookiePath != "" && username != "" && password != "") {

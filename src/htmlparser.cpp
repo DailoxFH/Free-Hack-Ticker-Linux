@@ -175,31 +175,28 @@ void HtmlParser::getDifferenceByValue(QMultiMap<int, QString> &hash, const QStri
 }
 
 
-void HtmlParser::getValues(QMultiMap<int, QString> &hash, int &what, QStringList &output) {
-
-    int size;
-    if(what == 0) {
-        QStringList temp = hash.values(0);
-        size = temp.count();
-        output.append(temp.at(0));
-    } else {
-        size = what;
-    }
-
+void HtmlParser::getValues(QMultiMap<int, QString> &hash, int what, QStringList &output) {
     QMapIterator<int, QString> i(hash);
     int count = 0;
+    int currentKey = 0;
     while(i.hasNext()) {
         i.next();
         QString val = i.value();
-        if(val == NULL) {
-            break;
-        }
-        if(count == size) {
+        if(i.key() != currentKey) {
             count = 0;
-            output.append(val);
-            if(what != 0) {
-                continue;
+            currentKey = i.key();
+        }
+        if(count == what) {
+            if(val.contains('\r')) {
+                val.replace('\r', "");
             }
+            if(val.contains('\n')) {
+                val.replace('\n', "");
+            }
+            if(val.contains('\t')) {
+                val.replace('\t', "");
+            }
+            output.append(val);
         }
         count++;
     }

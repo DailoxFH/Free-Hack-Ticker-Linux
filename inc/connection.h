@@ -15,11 +15,13 @@
 #include <openssl/aes.h>
 #include <openssl/err.h>
 
+class MainWindow;
+
 class Connection
 {
 public:
     //TODO: Mal aus dem Mist ne Liste oder so machen
-    Connection(std::string *path, bool *encryptCookie);
+    Connection(MainWindow *ui, std::string *path, bool *encryptCookie);
     ~Connection();
     char *str2md5(const char *str, int length);
 
@@ -48,6 +50,8 @@ private:
     CURL *curl;
     bool cleaned;
     bool *encryptCookie;
+
+    MainWindow *ui;
 };
 
 #endif // CONNECTION_H

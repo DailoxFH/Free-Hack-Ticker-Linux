@@ -40,6 +40,4 @@ add_executable(fhticker
     ${PROJECT_SOURCES}
     )
 
-target_link_libraries(fhticker PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-target_link_libraries(fhticker PRIVATE curl)
-target_link_libraries(fhticker PRIVATE crypto)
+target_link_libraries(fhticker PRIVATE Qt${QT_VERSION_MAJOR}::Widgets curl crypto Xss X11)

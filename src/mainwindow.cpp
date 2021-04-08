@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "checker.h"
+#include <X11/extensions/scrnsaver.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -241,15 +242,16 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void MainWindow::showMessage(const QString title, const QString message, QSystemTrayIcon::MessageIcon icon)
 {
-    QPoint mouseLoc = QCursor::pos();
-    int x = mouseLoc.x();
-    int y = mouseLoc.y();
+
+    Display *dpy = XOpenDisplay(nullptr);
+
     while(true) {
-        QPoint mouseLoc = QCursor::pos();
-        if(mouseLoc.x() != x || mouseLoc.y() != y) {
+        XScreenSaverInfo *info = XScreenSaverAllocInfo();
+        XScreenSaverQueryInfo(dpy, DefaultRootWindow(dpy), info);
+        if(info->idle < 1000) {
             break;
         }
-        usleep(58000);
+        usleep(50000);
     }
 
     if(useCustomNotifications) {
