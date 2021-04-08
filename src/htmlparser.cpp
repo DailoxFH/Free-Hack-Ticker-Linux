@@ -182,6 +182,11 @@ void HtmlParser::getValues(QMultiMap<int, QString> &hash, int what, QStringList 
     while(i.hasNext()) {
         i.next();
         QString val = i.value();
+
+        if(val == NULL) {
+            continue;
+        }
+
         if(i.key() != currentKey) {
             count = 0;
             currentKey = i.key();
